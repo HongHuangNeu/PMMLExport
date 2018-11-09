@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.3">
+	<Header>
+		<Application name="JPMML-SkLearn" version="1.5.8"/>
+		<Timestamp>2018-11-07T07:05:55Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension>PMMLPipeline(steps=[('mapper', DataFrameMapper(default=False, df_out=True,
+        features=[(['sbp'], MinMaxScaler(copy=True, feature_range=(0, 1))), (['tobacco'], MinMaxScaler(copy=True, feature_range=(0, 1))), ('ldl', None), ('adiposity', None), ('famhist', LabelEncoder()), ('typea', None), ('obesity', None), ('alcohol', None), (['age'], Imputer(axis=0, copy=True, missing_values=-1, strategy='mean', verbose=0))],
+        input_df=False, sparse=False)),
+       ('classifier', RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=10, n_jobs=None,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False))])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="chd" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+		<DataField name="sbp" optype="continuous" dataType="double"/>
+		<DataField name="tobacco" optype="continuous" dataType="double"/>
+		<DataField name="ldl" optype="continuous" dataType="double"/>
+		<DataField name="adiposity" optype="continuous" dataType="double"/>
+		<DataField name="famhist" optype="categorical" dataType="string">
+			<Value value="Absent"/>
+			<Value value="Present"/>
+			<Value value="haha"/>
+		</DataField>
+		<DataField name="obesity" optype="continuous" dataType="double"/>
+		<DataField name="alcohol" optype="continuous" dataType="double"/>
+		<DataField name="age" optype="continuous" dataType="double">
+			<Value value="-1" property="missing"/>
+		</DataField>
+	</DataDictionary>
+	<TransformationDictionary>
+		<DerivedField name="mix_max_scaler(sbp)" optype="continuous" dataType="double">
+			<Apply function="+">
+				<Apply function="*">
+					<FieldRef field="sbp"/>
+					<Constant dataType="double">0.010869565217391304</Constant>
+				</Apply>
+				<Constant dataType="double">-1.2391304347826086</Constant>
+			</Apply>
+		</DerivedField>
+		<DerivedField name="mix_max_scaler(tobacco)" optype="continuous" dataType="double">
+			<Apply function="*">
+				<FieldRef field="tobacco"/>
+				<Constant dataType="double">0.07092198581560284</Constant>
+			</Apply>
+		</DerivedField>
+		<DerivedField name="label_encoder(famhist)" optype="continuous" dataType="integer">
+			<MapValues outputColumn="data:output">
+				<FieldColumnPair field="famhist" column="data:input"/>
+				<InlineTable>
+					<row>
+						<data:input>Absent</data:input>
+						<data:output>0</data:output>
+					</row>
+					<row>
+						<data:input>Present</data:input>
+						<data:output>1</data:output>
+					</row>
+					<row>
+						<data:input>haha</data:input>
+						<data:output>2</data:output>
+					</row>
+				</InlineTable>
+			</MapValues>
+		</DerivedField>
+		<DerivedField name="float(mix_max_scaler(sbp))" optype="continuous" dataType="float">
+			<FieldRef field="mix_max_scaler(sbp)"/>
+		</DerivedField>
+		<DerivedField name="float(mix_max_scaler(tobacco))" optype="continuous" dataType="float">
+			<FieldRef field="mix_max_scaler(tobacco)"/>
+		</DerivedField>
+		<DerivedField name="float(ldl)" optype="continuous" dataType="float">
+			<FieldRef field="ldl"/>
+		</DerivedField>
+		<DerivedField name="float(adiposity)" optype="continuous" dataType="float">
+			<FieldRef field="adiposity"/>
+		</DerivedField>
+		<DerivedField name="float(label_encoder(famhist))" optype="continuous" dataType="float">
+			<FieldRef field="label_encoder(famhist)"/>
+		</DerivedField>
+		<DerivedField name="float(obesity)" optype="continuous" dataType="float">
+			<FieldRef field="obesity"/>
+		</DerivedField>
+		<DerivedField name="float(alcohol)" optype="continuous" dataType="float">
+			<FieldRef field="alcohol"/>
+		</DerivedField>
+		<DerivedField name="float(age)" optype="continuous" dataType="float">
+			<FieldRef field="age"/>
+		</DerivedField>
+		<DerivedField name="double(float(ldl))" optype="continuous" dataType="double">
+			<FieldRef field="float(ldl)"/>
+		</DerivedField>
+		<DerivedField name="double(float(obesity))" optype="continuous" dataType="double">
+			<FieldRef field="float(obesity)"/>
+		</DerivedField>
+		<DerivedField name="double(float(alcohol))" optype="continuous" dataType="double">
+			<FieldRef field="float(alcohol)"/>
+		</DerivedField>
+		<DerivedField name="double(float(mix_max_scaler(sbp)))" optype="continuous" dataType="double">
+			<FieldRef field="float(mix_max_scaler(sbp))"/>
+		</DerivedField>
+		<DerivedField name="double(float(adiposity))" optype="continuous" dataType="double">
+			<FieldRef field="float(adiposity)"/>
+		</DerivedField>
+		<DerivedField name="double(float(age))" optype="continuous" dataType="double">
+			<FieldRef field="float(age)"/>
+		</DerivedField>
+		<DerivedField name="double(float(mix_max_scaler(tobacco)))" optype="continuous" dataType="double">
+			<FieldRef field="float(mix_max_scaler(tobacco))"/>
+		</DerivedField>
+		<DerivedField name="double(float(label_encoder(famhist)))" optype="continuous" dataType="double">
+			<FieldRef field="float(label_encoder(famhist))"/>
+		</DerivedField>
+	</TransformationDictionary>
+	<MiningModel functionName="classification">
+		<MiningSchema>
+			<MiningField name="chd" usageType="target"/>
+			<MiningField name="famhist"/>
+			<MiningField name="ldl"/>
+			<MiningField name="adiposity"/>
+			<MiningField name="tobacco"/>
+			<MiningField name="sbp"/>
+			<MiningField name="obesity"/>
+			<MiningField name="alcohol"/>
+			<MiningField name="age" missingValueReplacement="49.333333333333336" missingValueTreatment="asMean"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<Segmentation multipleModelMethod="average">
+			<Segment id="1">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="ldl"/>
+						<MiningField name="obesity"/>
+						<MiningField name="alcohol"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="3.0">
+							<SimplePredicate field="double(float(ldl))" operator="lessOrEqual" value="4.119999885559082"/>
+							<ScoreDistribution value="0" recordCount="3.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="7.0">
+							<SimplePredicate field="double(float(obesity))" operator="lessOrEqual" value="30.440000534057617"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+						<Node score="0" recordCount="1.0">
+							<SimplePredicate field="double(float(alcohol))" operator="lessOrEqual" value="19.200000286102295"/>
+							<ScoreDistribution value="0" recordCount="1.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="1.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="1.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="adiposity"/>
+						<MiningField name="sbp"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(float(mix_max_scaler(sbp)))" operator="lessOrEqual" value="0.20652173459529877"/>
+							<Node score="1" recordCount="2.0">
+								<SimplePredicate field="double(float(adiposity))" operator="lessOrEqual" value="17.0"/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+							<Node score="0" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="6.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="age"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="7.0">
+							<SimplePredicate field="double(float(age))" operator="lessOrEqual" value="47.5"/>
+							<ScoreDistribution value="0" recordCount="7.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="5.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="5.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="age"/>
+						<MiningField name="sbp"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(float(mix_max_scaler(sbp)))" operator="lessOrEqual" value="0.20652173459529877"/>
+							<Node score="0" recordCount="4.0">
+								<SimplePredicate field="double(float(age))" operator="lessOrEqual" value="52.0"/>
+								<ScoreDistribution value="0" recordCount="4.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="7.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="obesity"/>
+						<MiningField name="alcohol"/>
+						<MiningField name="age"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1.0">
+							<SimplePredicate field="double(float(obesity))" operator="lessOrEqual" value="21.949999809265137"/>
+							<ScoreDistribution value="0" recordCount="1.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="6.0">
+							<SimplePredicate field="double(float(alcohol))" operator="lessOrEqual" value="2.274999976158142"/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="6.0"/>
+						</Node>
+						<Node score="0" recordCount="2.0">
+							<SimplePredicate field="double(float(age))" operator="lessOrEqual" value="51.5"/>
+							<ScoreDistribution value="0" recordCount="2.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="3.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="3.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="age"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="5.0">
+							<SimplePredicate field="double(float(age))" operator="lessOrEqual" value="47.5"/>
+							<ScoreDistribution value="0" recordCount="5.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node score="1" recordCount="7.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="7">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="ldl"/>
+						<MiningField name="tobacco"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(float(ldl))" operator="lessOrEqual" value="4.134999990463257"/>
+							<Node score="0" recordCount="2.0">
+								<SimplePredicate field="double(float(mix_max_scaler(tobacco)))" operator="lessOrEqual" value="0.4822694957256317"/>
+								<ScoreDistribution value="0" recordCount="2.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="8.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="8">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="obesity"/>
+						<MiningField name="age"/>
+						<MiningField name="tobacco"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node score="0" recordCount="1.0">
+							<SimplePredicate field="double(float(obesity))" operator="lessOrEqual" value="21.949999809265137"/>
+							<ScoreDistribution value="0" recordCount="1.0"/>
+							<ScoreDistribution value="1" recordCount="0.0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(float(mix_max_scaler(tobacco)))" operator="lessOrEqual" value="0.4858155995607376"/>
+							<Node score="0" recordCount="1.0">
+								<SimplePredicate field="double(float(age))" operator="lessOrEqual" value="49.0"/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="2.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="2.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="8.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="9">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="sbp"/>
+						<MiningField name="famhist"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(float(label_encoder(famhist)))" operator="lessOrEqual" value="0.5"/>
+							<Node score="0" recordCount="1.0">
+								<SimplePredicate field="double(float(mix_max_scaler(sbp)))" operator="lessOrEqual" value="0.31521739065647125"/>
+								<ScoreDistribution value="0" recordCount="1.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="4.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="4.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="7.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="7.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+			<Segment id="10">
+				<True/>
+				<TreeModel functionName="classification" missingValueStrategy="nullPrediction" splitCharacteristic="multiSplit">
+					<MiningSchema>
+						<MiningField name="sbp"/>
+						<MiningField name="tobacco"/>
+					</MiningSchema>
+					<Node>
+						<True/>
+						<Node>
+							<SimplePredicate field="double(float(mix_max_scaler(tobacco)))" operator="lessOrEqual" value="0.35638298094272614"/>
+							<Node score="0" recordCount="3.0">
+								<SimplePredicate field="double(float(mix_max_scaler(sbp)))" operator="lessOrEqual" value="0.31521739065647125"/>
+								<ScoreDistribution value="0" recordCount="3.0"/>
+								<ScoreDistribution value="1" recordCount="0.0"/>
+							</Node>
+							<Node score="1" recordCount="1.0">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0.0"/>
+								<ScoreDistribution value="1" recordCount="1.0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="8.0">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0.0"/>
+							<ScoreDistribution value="1" recordCount="8.0"/>
+						</Node>
+					</Node>
+				</TreeModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>
